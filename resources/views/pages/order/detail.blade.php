@@ -254,7 +254,7 @@
                     <div class="flex items-center gap-6">
                         {{-- Foto Produk --}}
                         <div class="w-20 h-20 bg-[#F7F0F0] rounded-[18px] overflow-hidden shrink-0 flex items-center justify-center">
-                            <img src="{{ asset('storage/products/' . $item->product->image) }}" 
+                            <img src="{{ asset("products/" . $item->product->image) }}" 
                                 class="w-full h-full object-cover" 
                                 alt="{{ $item->product->name }}"
                                 onerror="this.onerror=null;this.src='{{ asset('images/default-product.png') }}';">
