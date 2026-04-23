@@ -298,7 +298,7 @@
                                 @isset($cart)
                                     @foreach($cart as $item)
                                         <div class="flex items-center gap-4 border-b pb-4">
-                                            <img src="{{ asset("storage/" . $item->product->image) }}" class="w-20 rounded-xl">
+                                            <img src="{{ asset("products/"  . $item->product->image) }}" class="w-20 rounded-xl">
                                             <div>
                                                 <h4 class="font-bold">{{ $item->product->name }}</h4>
                                                 <p class="text-sm text-gray-500">{{ $item->quantity }} x Rp {{ number_format($item->product->price) }}</p>
