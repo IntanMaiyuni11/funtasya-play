@@ -1,0 +1,125 @@
+/* ======================
+   FONT
+====================== */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    font-family: "Inter", sans-serif;
+}
+
+/* ======================
+   GLOBAL COLORS (DESIGN SYSTEM)
+====================== */
+:root {
+    --primary: #ec4899;
+    --text-main: #707070;
+    --text-link: #335fff;
+    --bg-main: #ffffff;
+    --bg-nav-cart: #ec4899;
+    --bg-nav-profile: #2563eb;
+}
+
+/* ======================
+   COMPONENTS
+====================== */
+@layer components {
+    /* ======================
+       BUTTON PRIMARY
+    ====================== */
+    .btn-primary {
+        @apply w-full py-3.5 rounded-xl text-sm font-semibold text-white transition;
+        background-color: var(--primary);
+    }
+
+    .btn-primary:hover {
+        @apply opacity-90;
+    }
+
+    /* ======================
+       INPUT FIELD (DESIGN FIX)
+    ====================== */
+    .input-field {
+        @apply w-full px-5 py-4 text-sm rounded-[20px] outline-none transition;
+        background-color: #f3f4f6; /* abu soft */
+        border: 1px solid #9ca3af;
+        color: #111827;
+    }
+
+    .input-field::placeholder {
+        color: #6b7280;
+    }
+
+    .input-field:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.2);
+        background-color: #fff;
+    }
+
+    /* ======================
+       PASSWORD INPUT WRAPPER
+    ====================== */
+    .input-password {
+        @apply relative;
+    }
+
+    .input-password input {
+        @apply input-field pr-12;
+    }
+
+    .input-password button {
+        @apply absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-pink-500;
+    }
+
+    /* ======================
+       CARD AUTH
+    ====================== */
+    .card-auth {
+        @apply bg-white rounded-2xl shadow-lg;
+    }
+
+    /* ======================
+       DIVIDER
+    ====================== */
+    .divider {
+        @apply flex items-center my-6;
+    }
+
+    .divider hr {
+        @apply flex-grow border-gray-300;
+    }
+
+    .divider span {
+        @apply mx-4 text-sm text-gray-500;
+    }
+
+    /* ======================
+       SOCIAL BUTTON (FIX DESIGN)
+    ====================== */
+    .social-btn {
+        @apply w-12 h-12 flex items-center justify-center rounded-xl transition;
+        border: 1.5px solid var(--primary);
+    }
+
+    .social-btn:hover {
+        background-color: #fdf2f8;
+    }
+
+    /* ======================
+       TEXT LINK
+    ====================== */
+    .text-link {
+        color: var(--text-link);
+    }
+
+    /* ======================
+       TITLE AUTH (FIX DESIGN)
+    ====================== */
+    .title-auth {
+        @apply text-xl md:text-2xl font-bold text-center;
+        color: #111827;
+    }
+}
