@@ -90,7 +90,7 @@
         </div>
 
         <div class="hidden md:flex w-1/2 justify-start items-center">
-            <img src="{{ asset('images/Kucing.png') }}" 
+            <img src="{{ asset('images/kucing.png') }}" 
                  class="w-[450px] lg:w-[550px] object-contain drop-shadow-lg">
         </div>
     </div>
