@@ -94,7 +94,7 @@
         {{-- Scope Alpine.js per Produk --}}
         <div class="group relative" x-data="{ 
             showQuickModal: false,
-            activeImg: '{{ asset('storage/products/' . $product->image) }}',
+            activeImg: '{{ asset('products/' . $product->image) }}',
             selectedVar: '',
             price: {{ (int) $product->price }},
             variations: @js($product->variations ?? []),
@@ -384,7 +384,8 @@
     }
 
     /* Layar Tablet */
-    @media (min-width: 768px) and (max-width: 1023px) {
+    @media (min-width: 768px) and (max-width: 1023px) 
+{
         .section-kucing {
             margin-top: -280px !important;
         }

@@ -6,7 +6,7 @@
 {{-- Root Element dengan Alpine.js untuk kontrol Modal, Gambar, dan Harga --}}
 <div class="bg-white h-auto pb-10" x-data="{ 
     showModal: false,
-    activeImage: '{{ asset('storage/products/' . $product->image) }}', 
+    activeImage: '{{ asset('products/' . $product->image) }}', 
     qty: 1,
     selectedVariation: '',
     allVariations: @js($product->variations ?? []),
@@ -38,7 +38,7 @@
 
         {{-- GRID UTAMA: Detail Produk --}}
         <div class="flex flex-col lg:flex-row gap-12" x-data="{ 
-            activeImage: '{{ asset('storage/products/' . $product->image) }}', 
+            activeImage: '{{ asset('products/' . $product->image) }}', 
             qty: 1,
             selectedVariation: '',
             {{-- Menggunakan @js agar array PHP aman masuk ke JavaScript --}}
