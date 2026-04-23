@@ -94,7 +94,7 @@
         {{-- Scope Alpine.js per Produk --}}
         <div class="group relative" x-data="{ 
             showQuickModal: false,
-            activeImg: '{{ asset('products/' . $product->image) }}',
+            activeImg: '{{ asset("products/" . $product->image) }}',
             selectedVar: '',
             price: {{ (int) $product->price }},
             variations: @js($product->variations ?? []),
@@ -253,7 +253,7 @@
                                     {{-- Foto Profil --}}
                                     <div class="absolute top-6 right-6">
                                         <div class="w-16 h-16 rounded-full border-4 border-white/30 overflow-hidden shadow-md">
-                                            <img src="{{ asset('images/' . ($review->user_avatar ?? 'default-user.png')) }}" 
+                                            <img src="{{ asset('avatars/' . ($review->user_avatar ?? 'default-user.png')) }}"
                                                 class="w-full h-full object-cover" alt="User">
                                         </div>
                                     </div>

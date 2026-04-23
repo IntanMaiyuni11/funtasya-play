@@ -6,7 +6,7 @@
 {{-- Root Element dengan Alpine.js untuk kontrol Modal, Gambar, dan Harga --}}
 <div class="bg-white h-auto pb-10" x-data="{ 
     showModal: false,
-    activeImage: '{{ asset('products/' . $product->image) }}', 
+    activeImg: '{{ asset("products/" . $product->image) }}',
     qty: 1,
     selectedVariation: '',
     allVariations: @js($product->variations ?? []),
@@ -38,7 +38,7 @@
 
         {{-- GRID UTAMA: Detail Produk --}}
         <div class="flex flex-col lg:flex-row gap-12" x-data="{ 
-            activeImage: '{{ asset('products/' . $product->image) }}', 
+            activeImg: '{{ asset("products/" . $product->image) }}',
             qty: 1,
             selectedVariation: '',
             {{-- Menggunakan @js agar array PHP aman masuk ke JavaScript --}}
@@ -66,7 +66,7 @@
                         <button @click="activeImage = '{{ asset('storage/products/' . $product->image) }}'" 
                             class="w-24 h-24 flex-shrink-0 border-2 rounded-[20px] p-2 bg-white transition-all" 
                             :class="activeImage.includes('{{ $product->image }}') ? 'border-[#ec4899]' : 'border-transparent'">
-                            <img src="{{ asset('storage/products/' . $product->image) }}" class="w-full h-full object-contain">
+                            <img src="{{ asset('products/' . $product->image) }}" class="w-full h-full object-contain">
                         </button>
 
                         {{-- Gallery Images --}}
@@ -75,7 +75,7 @@
                             <button @click="activeImage = '{{ asset('storage/products/' . $img) }}'" 
                                 class="w-24 h-24 flex-shrink-0 border-2 rounded-[20px] p-2 bg-white transition-all" 
                                 :class="activeImage.includes('{{ $img }}') ? 'border-[#ec4899]' : 'border-transparent'">
-                                <img src="{{ asset('storage/products/' . $img) }}" class="w-full h-full object-contain">
+                                <img src="{{ asset('products/' . $img) }}" class="w-full h-full object-contain">
                             </button>
                             @endforeach
                         @endif
@@ -326,7 +326,7 @@
         {{-- Alpine.js Scope per Produk --}}
         <div class="group relative" x-data="{ 
             showQuickModal: false,
-            activeImg: '{{ asset('storage/products/' . $item->image) }}',
+            activeImg: '{{ asset("products/" . $item->image) }}',
             selectedVar: '',
             qty: 1,
             price: {{ (int) $item->price }},
