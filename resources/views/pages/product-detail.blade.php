@@ -6,7 +6,7 @@
 {{-- Root Element dengan Alpine.js untuk kontrol Modal, Gambar, dan Harga --}}
 <div class="bg-white h-auto pb-10" x-data="{ 
     showModal: false,
-    activeImg: '{{ asset("products/" . $products ->image) }}',
+    activeImg: '{{ asset("products/" . $product->image) }}',
     qty: 1,
     selectedVariation: '',
     allVariations: @js($product->variations ?? []),
