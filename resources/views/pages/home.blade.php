@@ -40,7 +40,7 @@
                     
                     {{-- Poin 1 --}}
                     <div class="p-10 flex flex-col items-center text-center">
-                        <img src="{{ asset('images/k-1.png') }}" class="w-10 h-10 mb-5 object-contain" alt="Ramah Anak">
+                        <img src="{{ asset('images/K-1.png') }}" class="w-10 h-10 mb-5 object-contain" alt="Ramah Anak">
                         <h3 class="text-[#e21b70] font-bold text-[17px] mb-2">100% Ramah Petualang Cilik</h3>
                         <p class="text-[#374151] text-[13px] leading-relaxed">
                             Aman dari monster, debu sihir, dan bahan berbahaya.
@@ -71,7 +71,7 @@
 
                     {{-- Poin 3 --}}
                     <div class="p-10 flex flex-col items-center text-center">
-                        <img src="{{ asset('images/k-3.png') }}" class="w-10 h-10 mb-5 object-contain" alt="Belajar Bermain">
+                        <img src="{{ asset('images/K-3.png') }}" class="w-10 h-10 mb-5 object-contain" alt="Belajar Bermain">
                         <h3 class="text-[#e21b70] font-bold text-[17px] mb-2">Belajar Lewat Bermain</h3>
                         <p class="text-[#374151] text-[13px] leading-relaxed">
                             Setiap produk dirancang untuk bikin rasa ingin tahu terus hidup.
