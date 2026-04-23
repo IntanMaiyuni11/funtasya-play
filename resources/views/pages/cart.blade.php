@@ -122,7 +122,7 @@
         {{-- Scope Alpine.js per Produk --}}
         <div class="group relative" x-data="{ 
             showQuickModal: false,
-            activeImg: '{{ asset('products/' . $product->image) }}',
+            activeImg: '{{ asset('products/' . $item->image) }}',
             selectedVar: '',
             price: {{ (int) $item->price }},
             variations: @js($item->variations ?? []),
