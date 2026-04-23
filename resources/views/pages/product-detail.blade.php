@@ -38,7 +38,7 @@
 
         {{-- GRID UTAMA: Detail Produk --}}
         <div class="flex flex-col lg:flex-row gap-12" x-data="{ 
-            activeImg: '{{ asset("products/" . $product->image) }}',
+            activeImg: '{{ asset('products/' . $product->image) }}',
             qty: 1,
             selectedVariation: '',
             {{-- Menggunakan @js agar array PHP aman masuk ke JavaScript --}}
@@ -63,7 +63,7 @@
                     
                     <div class="flex-1 flex gap-4 overflow-x-auto no-scrollbar py-2">
                         {{-- Main Image Thumbnail --}}
-                        <button @click="activeImage = '{{ asset("products/" . $product->image) }}'" 
+                        <button @click="activeImage = '{{ asset('products/' . $product->image) }}'" 
                             class="w-24 h-24 flex-shrink-0 border-2 rounded-[20px] p-2 bg-white transition-all" 
                             :class="activeImage.includes('{{ $product->image }}') ? 'border-[#ec4899]' : 'border-transparent'">
                             <img src="{{ asset("products/" . $product->image) }}" class="w-full h-full object-contain">
@@ -72,10 +72,10 @@
                         {{-- Gallery Images --}}
                         @if($product->gallery && is_array($product->gallery))
                             @foreach($product->gallery as $img)
-                            <button @click="activeImage = '{{ asset("products/" . $img) }}'" 
+                            <button @click="activeImage = '{{ asset('products/' . $img) }}'" 
                                 class="w-24 h-24 flex-shrink-0 border-2 rounded-[20px] p-2 bg-white transition-all" 
                                 :class="activeImage.includes('{{ $img }}') ? 'border-[#ec4899]' : 'border-transparent'">
-                                <img src="{{ asset("products/" . $img) }}" class="w-full h-full object-contain">
+                                <img src="{{ asset('products/' . $img) }}" class="w-full h-full object-contain">
                             </button>
                             @endforeach
                         @endif
