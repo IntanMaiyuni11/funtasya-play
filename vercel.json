@@ -16,6 +16,9 @@
         }
     ],
     "env": {
+        "APP_KEY": "base64:OqPl7y4uyX9TWyVjvgKC486xTnSAK0DnJEf/Ng5DP6k=",
+        "APP_DEBUG": "true",
+        "APP_URL": "https://funtasya-play.vercel.app",
         "APP_CONFIG_CACHE": "/tmp/config.php",
         "APP_EVENTS_CACHE": "/tmp/events.php",
         "APP_PACKAGES_CACHE": "/tmp/packages.php",
