@@ -75,7 +75,7 @@
             <div class="rounded-[35px] p-8 md:p-12 text-center text-white relative overflow-hidden shadow-lg" 
                  style="background: linear-gradient(90deg, #ec4899 0%, #ec48d6 50%, #ec4899 100%);">
                 
-                <img src="{{ asset('images/kucing.png') }}" class="absolute left-2 bottom-0 w-20 md:w-28 hidden md:block">
+                <img src="{{ asset('images/Kucing-bawah-hati.png') }}" class="absolute left-2 bottom-0 w-20 md:w-28 hidden md:block">
                 
                 <div class="relative z-20">
                     <h2 class="text-[26px] md:text-[32px] font-extrabold mb-2 text-white">Siap Untuk Mulai Belajar?</h2>
@@ -85,7 +85,7 @@
                     </a>
                 </div>
 
-                <img src="{{ asset('images/kucing.png') }}" class="absolute right-2 bottom-0 w-20 md:w-28 hidden md:block scale-x-[-1]">
+                <img src="{{ asset('images/Kucing-bawah-hati.png') }}" class="absolute right-2 bottom-0 w-20 md:w-28 hidden md:block scale-x-[-1]">
             </div>
         </div>
     </section>
