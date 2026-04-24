@@ -30,7 +30,7 @@
                         <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center overflow-hidden border-4 border-white shadow-sm">
                             @if(auth()->user()->avatar)
                                 {{-- Tampilkan foto yang diupload customer --}}
-                                <img src="{{ asset('storage/' . auth()->user()->avatar) }}" class="w-full h-full object-cover">
+                              <img src="{{ asset(auth()->user()->avatar ?? 'avatars/default-user.png') }}" class="w-full h-full object-cover">
                             @else
                                 {{-- Tampilkan default avatar dari UI Avatars --}}
                                 <img src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=ec4899&color=fff&bold=true&length=2&size=80" class="w-full h-full object-cover">
