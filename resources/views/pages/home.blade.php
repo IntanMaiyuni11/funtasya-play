@@ -300,6 +300,23 @@
 
 @push('addon-script')
 <script>
+    const carousel = document.getElementById('carousel');
+    const slides = carousel.children;
+    let index = 0;
+
+    function showSlide() {
+        index++;
+        if (index >= slides.length) {
+            index = 0;
+        }
+
+        carousel.style.transform = `translateX(-${index * 100}%)`;
+    }
+
+    // Auto slide tiap 3 detik
+    setInterval(showSlide, 3000);
+</script>
+<script>
     document.addEventListener('DOMContentLoaded', function () {
         const totalReviews = document.querySelectorAll('.swiper-slide').length;
 
