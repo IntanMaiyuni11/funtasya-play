@@ -37,7 +37,7 @@
                     <div class="flex flex-col lg:flex-row items-center justify-between bg-white rounded-[30px] p-6 gap-6 shadow-sm border border-gray-50 mb-4">
                         <div class="flex items-center gap-6 flex-1 w-full">
                             <div class="w-24 h-24 bg-white rounded-[20px] p-2 flex-shrink-0 border border-gray-100">
-                                <img :src="'/storage/products/' + item.image" class="w-full h-full object-contain">
+                               <img :src="'/products/' + item.image" class="w-full h-full object-contain">
                             </div>
 
                             <div>
@@ -122,7 +122,7 @@
         {{-- Scope Alpine.js per Produk --}}
         <div class="group relative" x-data="{ 
             showQuickModal: false,
-            activeImg: '{{ asset("products/" . $item->image) }}',
+            activeImage: '{{ asset("products/" . $item->image) }}',
             selectedVar: '',
             price: {{ (int) $item->price }},
             variations: @js($item->variations ?? []),
