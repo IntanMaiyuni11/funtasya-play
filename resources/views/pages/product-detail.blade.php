@@ -6,7 +6,7 @@
 {{-- Root Element dengan Alpine.js untuk kontrol Modal, Gambar, dan Harga --}}
 <div class="bg-white h-auto pb-10" x-data="{ 
     showModal: false,
-    activeImg: '{{ asset("products/" . $product->image) }}',
+    activeImage: '{{ asset("products/" . $product->image) }}',
     qty: 1,
     selectedVariation: '',
     allVariations: @js($product->variations ?? []),
@@ -63,7 +63,7 @@
                     
                     <div class="flex-1 flex gap-4 overflow-x-auto no-scrollbar py-2">
                         {{-- Main Image Thumbnail --}}
-                        <button @click="activeImage = '{{ asset("products/" . $product->image) }}'" 
+                       <button @click="activeImage = '{{ asset("products/" . $product->image) }}'"
                             class="w-24 h-24 flex-shrink-0 border-2 rounded-[20px] p-2 bg-white transition-all" 
                             :class="activeImage.includes('{{ $product->image }}') ? 'border-[#ec4899]' : 'border-transparent'">
                             <img src="{{ asset("products/" . $product->image) }}" class="w-full h-full object-contain">
