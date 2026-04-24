@@ -282,7 +282,7 @@
                             @if(isset($isInstant) && $isInstant)
                                 {{-- MODE: BELI SEKARANG (Tampil 1 Produk) --}}
                                 <div class="flex gap-4 items-center">
-                                    <img src="{{ asset("products/" . $product->image) }}" class="w-16 h-16 rounded-xl object-contain border">
+                                    <img src="{{ asset('products/' . $product->image) }}" class="w-16 h-16 rounded-xl object-contain border">
                                     <div class="flex-1">
                                         <p class="font-bold text-sm line-clamp-1">{{ $product->name }}</p>
                                         <p class="text-xs text-gray-500">{{ $quantity }} x Rp {{ number_format($product->price, 0, ',', '.') }}</p>
@@ -298,7 +298,7 @@
                                 @isset($cart)
                                     @foreach($cart as $item)
                                         <div class="flex items-center gap-4 border-b pb-4">
-                                            <img src="{{ asset("products/"  . $item->product->image) }}" class="w-20 rounded-xl">
+                                            <img src="{{ asset('products/' . $item->product->image) }}" class="w-20 rounded-xl">
                                             <div>
                                                 <h4 class="font-bold">{{ $item->product->name }}</h4>
                                                 <p class="text-sm text-gray-500">{{ $item->quantity }} x Rp {{ number_format($item->product->price) }}</p>
