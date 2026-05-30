@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
 
-    <link rel="icon" href="{{ asset('images/logo_funtasyaplay.png') }}">
-    <title>@yield('title', 'Funtasya Play')</title>
+    <link rel="icon" href="{{ asset('images3/logo.png') }}">
+    <title>@yield('title', 'PlayLearn')</title>
 
     {{-- STYLE --}}
     @stack('prepend-style')
@@ -30,7 +30,7 @@
 
 </head>
 
-<body class="bg-white flex flex-col min-h-screen">
+<body class="bg-slate-900 flex flex-col min-h-screen">
 
     {{-- NAVBAR STICKY --}}
     <nav class="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-100">
