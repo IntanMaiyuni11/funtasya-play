@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('images/logo_funtasyaplay.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('images/logo_funtasyaplay.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('images3/logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images3/logo.png') }}">
     <title>Funtasya Play</title>
     @vite('resources/css/app.css')
 
