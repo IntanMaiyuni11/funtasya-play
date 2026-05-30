@@ -1,185 +1,145 @@
 @extends('layouts.main')
 
 @section('content')
-<div class="bg-white min-h-screen pb-20">
-
-    {{-- SECTION 1: HERO EXPLORE --}}
-    <section class="max-w-7xl mx-auto px-4 pt-6">
-        <div class="relative rounded-[25px] md:rounded-[40px] overflow-hidden shadow-sm">
-            <img src="{{ asset('images/explore.png') }}" 
-                 class="w-full h-auto object-contain block" 
-                 alt="Explore Funtasya Play">
-            <div class="absolute inset-0 bg-black/5 pointer-events-none"></div>
+<div class="bg-slate-50 min-h-screen py-12">
+    <div class="max-w-7xl mx-auto px-6">
+        
+        {{-- Header --}}
+        <div class="mb-12 text-center md:text-left">
+            <h1 class="text-4xl md:text-5xl font-black text-slate-900">Katalog Produk</h1>
+            <p class="text-slate-500 mt-2 text-lg">Temukan media belajar yang tepat untuk si kecil.</p>
         </div>
-    </section>
 
-    {{-- SECTION 2: CATEGORY TABS --}}
-    <section class="max-w-4xl mx-auto px-6 py-10">
-        <div class="bg-[#EC4899] p-1.5 md:p-2 rounded-full md:rounded-2xl flex flex-wrap justify-center items-center gap-1 md:gap-4 shadow-md">
-            
+        {{-- Filter Categories --}}
+        <div class="flex flex-wrap gap-2 mb-12 justify-center md:justify-start">
             <a href="{{ route('catalog') }}" 
-               class="{{ !request('category') ? 'bg-white text-[#EC4899]' : 'text-white hover:bg-white/20' }} px-6 py-2 rounded-full text-xs md:text-sm font-bold transition-all">
-               All
+               class="px-6 py-2.5 rounded-xl font-bold text-sm transition-all {{ !request('category') ? 'bg-slate-900 text-white shadow-lg' : 'bg-white text-slate-600 hover:bg-slate-100' }}">
+                Semua Produk
             </a>
-
             @foreach($categories as $cat)
             <a href="{{ route('catalog', ['category' => $cat->slug]) }}" 
-               class="{{ request('category') == $cat->slug ? 'bg-white text-[#EC4899]' : 'text-white hover:bg-white/20' }} px-6 py-2 rounded-full text-xs md:text-sm font-bold transition-all">
-               {{ $cat->name }}
+               class="px-6 py-2.5 rounded-xl font-bold text-sm transition-all {{ request('category') == $cat->slug ? 'bg-slate-900 text-white shadow-lg' : 'bg-white text-slate-600 hover:bg-slate-100' }}">
+                {{ $cat->name }}
             </a>
             @endforeach
         </div>
-    </section>
 
- {{-- SECTION 3: PRODUCT GRID --}}
-<section class="max-w-6xl mx-auto px-6">
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8">
-        @foreach($products as $product)
-        {{-- Alpine.js Scope per Produk --}}
-        <div class="group relative" x-data="{ 
-            showQuickModal: false,
-           activeImg: '{{ asset("products/" . $product->image) }}',
-            selectedVar: '',
-            price: {{ (int) $product->price }},
-            variations: @js($product->variations ?? []),
-            
-            selectVar(v) {
-                this.selectedVar = typeof v === 'object' ? v.nama : v;
-                if(typeof v === 'object' && v.harga) {
-                    this.price = v.harga;
-                }
-            }
-        }">
-            {{-- Link ke Detail Produk --}}
-            <a href="{{ route('product.show', $product->slug) }}" class="block">
-                <div class="bg-[#D6F7FE] rounded-[25px] lg:rounded-[35px] p-4 lg:p-6 relative flex flex-col items-center transition-all duration-300 group-hover:shadow-xl group-hover:-translate-y-2 min-h-[220px] lg:min-h-[340px]">
-                    <div class="w-full h-28 lg:h-44 flex items-center justify-center mb-2 lg:mb-4">
-                        <img :src="activeImg" 
-                             class="max-w-[85%] max-h-full object-contain drop-shadow-md transition-transform duration-300 group-hover:scale-110" 
-                             alt="{{ $product->name }}">
+        {{-- Product Grid --}}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            @foreach($products as $product)
+            <div class="group bg-white rounded-[2rem] p-4 border border-slate-100 hover:border-blue-200 transition-all duration-300 hover:shadow-xl hover:shadow-blue-50/50">
+                <a href="{{ route('product.show', $product->slug) }}">
+                    <div class="relative aspect-square rounded-[1.5rem] overflow-hidden bg-slate-100 mb-4">
+                        <img src="{{ asset('storage/' . $product->image) }}" 
+                             alt="{{ $product->name }}" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     </div>
-
-                    <h3 class="text-[10px] sm:text-[11px] md:text-[13px] font-black text-[#444444] text-center leading-tight px-1 mb-10 md:mb-14">
-                        {{ Str::limit($product->name, 35) }}
+                </a>
+                
+                <div class="px-2">
+                    <span class="text-[10px] font-black tracking-widest uppercase text-blue-500">{{ $product->category->name ?? 'Produk' }}</span>
+                    <h3 class="text-slate-900 font-bold text-lg mt-1 mb-3 group-hover:text-blue-600 transition-colors line-clamp-2">
+                        {{ $product->name }}
                     </h3>
-                </div>
-            </a>
-            
-            {{-- Tombol Aksi (Trigger Modal) --}}
-            <div class="absolute bottom-4 md:bottom-6 left-2 right-2 md:left-5 md:right-5 flex items-center gap-1.5 z-20">
-                
-                {{-- Tombol Keranjang --}}
-                <button @click="showQuickModal = true" type="button"
-                        class="bg-[#ED4D9E] w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-[10px] md:rounded-[14px] hover:bg-pink-600 transition-all shadow-sm">
-                    <i class="fa-solid fa-bag-shopping text-white text-[12px] md:text-[15px]"></i>
-                </button>
-                
-                {{-- Tombol Harga --}}
-                <button @click="showQuickModal = true" type="button"
-                        class="flex-1 bg-[#2D68F8] h-8 md:h-10 flex flex-col items-center justify-center text-[#ffffff] font-bold rounded-full hover:bg-blue-700 transition-all shadow-sm group/btn"
-                        style="font-family: 'Roboto', sans-serif;">
-                    <span class="truncate px-1 text-[9px] md:text-[11px]">
-                        @if($product->price_max)
-                            Rp {{ number_format($product->price, 0, ',', '.') }} - {{ number_format($product->price_max, 0, ',', '.') }}
-                        @else
-                            Rp {{ number_format($product->price, 0, ',', '.') }}
-                        @endif
-                    </span>
-                </button>
-            </div>
-
-            {{-- QUICK SELECTION MODAL --}}
-            <div x-show="showQuickModal" 
-                 class="fixed inset-0 z-[150] flex items-end justify-center bg-black/60" 
-                 x-transition:enter="transition ease-out duration-300"
-                 x-transition:enter-start="opacity-0"
-                 x-transition:enter-end="opacity-100"
-                 x-transition:leave="transition ease-in duration-200"
-                 x-transition:leave-start="opacity-100"
-                 x-transition:leave-end="opacity-0"
-                 style="display: none;">
-                
-                <div @click.away="showQuickModal = false" 
-                     class="bg-white w-full max-w-md rounded-t-[30px] p-6 shadow-2xl relative text-left">
                     
-                    {{-- Header Modal --}}
-                    <div class="flex gap-4 mb-6 border-b pb-4">
-                        <div class="w-16 h-16 bg-gray-50 rounded-xl p-1 flex items-center justify-center">
-                            <img :src="activeImg" class="max-w-full max-h-full object-contain">
-                        </div>
-                        <div class="flex flex-col justify-end">
-                            <p class="text-xl font-bold text-[#F8A410]">Rp <span x-text="new Intl.NumberFormat('id-ID').format(price)"></span></p>
-                            <p class="text-[10px] text-gray-500">Stok: {{ $product->stock }}</p>
-                        </div>
-                        <button @click="showQuickModal = false" class="absolute top-4 right-4 text-gray-400 hover:text-black">
-                            <i class="fa-solid fa-circle-xmark text-2xl"></i>
+                    <div class="flex items-center justify-between">
+                        <span class="text-lg font-black text-slate-900">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
+                        
+                        {{-- Tombol Trigger Modal --}}
+                       <button type="button"
+                            onclick="window.dispatchEvent(new CustomEvent('open-modal-cart', { detail: { 
+                                id: '{{ $product->id }}', 
+                                name: '{{ addslashes($product->name) }}', 
+                                price: {{ $product->price }}, 
+                                image: '{{ asset('storage/' . $product->image) }}', 
+                                stock: '{{ $product->stock }}', 
+                                variants: {{ json_encode($product->variants) }} 
+                            }}))"
+                            class="w-10 h-10 rounded-full bg-slate-900 text-white flex items-center justify-center hover:bg-blue-600 transition-all">
+                            <i class="fas fa-plus"></i>
                         </button>
                     </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
 
-                    {{-- Pilihan Variasi --}}
-                    <div class="mb-8">
-                        <h4 class="font-bold text-xs mb-3 text-gray-800 uppercase tracking-widest">Pilih Tema Produk:</h4>
+        {{-- Pagination --}}
+        <div class="mt-16">
+            {{ $products->links() }}
+        </div>
+    </div>
+
+
+{{-- MODAL (Taruh di akhir file, sebelum @endsection) --}}
+<div x-data="{ 
+    open: false, 
+    product: { id: '', name: '', price: 0, image: '', stock: 0, variants: [] }, 
+    selectedVariation: null, 
+    currentPrice: 0 
+}"
+     @open-modal-cart.window="
+        open = true; 
+        product = $event.detail; 
+        currentPrice = $event.detail.price; 
+        selectedVariation = null;
+     ">
+
+    <template x-teleport="body">
+        <div x-show="open" class="fixed inset-0 z-[9999] flex items-center justify-center p-4" x-cloak>
+            
+            <div x-show="open" @click="open = false" class="fixed inset-0 bg-black/40 backdrop-blur-sm" x-transition.opacity></div>
+            
+            <div x-show="open" 
+                 @click.away="open = false"
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0 scale-95"
+                 x-transition:enter-end="opacity-100 scale-100"
+                 class="bg-white w-full max-w-sm rounded-[2rem] p-6 shadow-2xl relative z-50">
+                
+                <button @click="open = false" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-circle-xmark text-xl"></i>
+                </button>
+
+                <div class="flex gap-4 mb-6">
+                    <div class="w-20 h-20 bg-slate-100 rounded-2xl overflow-hidden shrink-0">
+                        <img :src="product.image" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex flex-col justify-center">
+                        <h2 class="font-bold text-slate-900 text-base" x-text="product.name"></h2>
+                        <p class="text-xl font-black text-blue-600">Rp <span x-text="new Intl.NumberFormat('id-ID').format(currentPrice)"></span></p>
+                        <p class="text-xs text-slate-400" x-text="'Stok: ' + product.stock"></p>
+                    </div>
+                </div>
+
+                <hr class="border-slate-100 mb-6">
+
+                <form action="{{ route('cart.add') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="product_id" :value="product.id">
+                    <input type="hidden" name="variation" :value="selectedVariation">
+                    
+                    <div class="mb-6">
+                        <p class="text-xs font-bold text-slate-900 mb-3">Variasi:</p>
                         <div class="flex flex-wrap gap-2">
-                            <template x-for="v in variations" :key="typeof v === 'object' ? v.nama : v">
-                                <button @click="selectVar(v)" 
-                                        type="button"
-                                        :class="selectedVar === (typeof v === 'object' ? v.nama : v) ? 'border-[#ec4899] bg-pink-50 text-[#ec4899] ring-2 ring-pink-100' : 'border-gray-200 text-gray-600'"
-                                        class="px-4 py-2 border-2 rounded-xl text-xs font-bold transition-all">
-                                    <span x-text="typeof v === 'object' ? v.nama : v"></span>
+                            <template x-for="v in product.variants" :key="v.id">
+                                <button type="button" 
+                                        @click="selectedVariation = v.name; currentPrice = v.price"
+                                        :class="selectedVariation === v.name ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'"
+                                        class="px-4 py-2 rounded-lg font-bold text-xs transition-all border border-slate-200"
+                                        x-text="v.name">
                                 </button>
                             </template>
-                            @if(!$product->variations)
-                                <p class="text-xs italic text-gray-400">Tidak ada variasi untuk produk ini.</p>
-                            @endif
                         </div>
                     </div>
 
-                   {{-- Form Submit --}}
-                    <form action="{{ route('cart.add') }}" method="POST" class="grid grid-cols-2 gap-3" x-ref="productForm">
-                        @csrf
-                        <input type="hidden" name="product_id" value="{{ $product->id }}">
-                        <input type="hidden" name="quantity" value="1">
-                        <input type="hidden" name="variation" :value="selectedVar">
-
-                        {{-- Tombol Tambah Keranjang --}}
-                        <button type="submit" 
-                                class="border-2 border-[#EC4899] text-[#EC4899] py-3 rounded-xl font-bold text-xs hover:bg-pink-50 transition-colors">
-                            + Keranjang
-                        </button>
-                        
-                        {{-- Tombol Beli Sekarang --}}
-                        <button type="button"
-                            @click="
-                                if (variations.length > 0 && !selectedVar) { 
-                                    alert('Silakan pilih tema terlebih dahulu!'); 
-                                } else {
-                                    window.location.href = '{{ route('checkout.index') }}' + 
-                                        '?product_id={{ $product->id ?? $item->id }}' + 
-                                        '&quantity=1' + 
-                                        '&variation=' + encodeURIComponent(selectedVar) + 
-                                        '&direct=1';
-                                }
-                            "
-                            class="bg-[#EC4899] text-white py-3 rounded-xl font-bold text-xs shadow-lg shadow-pink-200 hover:brightness-110 transition-all">
-                            Beli Sekarang
-                        </button>
-                    </form>
-                </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-2xl font-black hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">
+                        Tambah ke Keranjang
+                    </button>
+                </form>
             </div>
         </div>
-        @endforeach
-    </div>
-</section>
-
-    {{-- --- PAGINATION --- --}}
-    <div class="mt-12 flex justify-center custom-pagination">
-        {{ $products->appends(request()->query())->links() }}
-    </div>
-
-    @if($products->isEmpty())
-    <div class="text-center py-20">
-        <p class="text-gray-400 italic font-medium">Wah, belum ada mainan di kategori ini...</p>
-    </div>
-    @endif
-</section>
+    </template>
+</div>
+</div>
 @endsection
