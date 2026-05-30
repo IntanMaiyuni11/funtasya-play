@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
 
-    <link rel="icon" href="{{ asset('images/logo_funtasyaplay.png') }}">
-    <title>@yield('title', 'Funtasya Play')</title>
+    <link rel="icon" href="{{ asset('images3/logo.png') }}">
+    <title>@yield('title', 'PlayLearn')</title>
 
     {{-- STYLE --}}
     @stack('prepend-style')
