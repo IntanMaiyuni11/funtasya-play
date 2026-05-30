@@ -1,173 +1,225 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{{ asset('images/logo_funtasyaplay.png') }}">
-    <title>@yield('title') | Funtasya Play Admin</title>
-
+    <link rel="icon" href="{{ asset('images3/logo.png') }}">
+    <title>@yield('title') | Panel Admin Funtasya Play</title>
+    
     {{-- STYLE --}}
     @stack('prepend-style')
     @include('includes.style')
     @stack('addon-style')
 
     <style>
-        .sidebar-active {
-            background-color: #EC4899; 
-            color: white !important;
-        }
-        /* Ikon jadi putih saat aktif */
-        .sidebar-active svg {
-            stroke: white !important;
-        }
-        /* Efek hover pada sidebar */
-        .sidebar-link:hover:not(.sidebar-active) {
-            background-color: #fff1f8;
-            color: #EC4899;
-        }
-        .sidebar-link:hover:not(.sidebar-active) svg {
-            stroke: #EC4899;
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #f1f1f1;
-            border-radius: 10px;
+        body { font-family: 'Gotham rounded', sans-serif; background-color: #FFFFFF; }
+        .sidebar-text { font-weight: 700; font-size: 14px; line-height: 20px; letter-spacing: -0.35px; }
+        .nav-link.active { background-color: rgba(255, 109, 174, 0.2); color: #EC4899; }
+        .nav-link { color: #2c2f30; transition: all 0.2s ease-in-out; }
+        .nav-link:hover:not(.active) { background-color: rgba(0, 0, 0, 0.03); }
+        
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: #ACB3B7; border-radius: 10px; }
+
+        /* Filter ini mengubah warna icon SVG menjadi #EC4899 */
+        .icon-active {
+            filter: invert(43%) sepia(48%) saturate(3781%) hue-rotate(309deg) brightness(97%) contrast(92%);
+            opacity: 1 !important;
         }
     </style>
+    <style>
+    .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange, 
+    .flatpickr-day.selected.prevMonthDay, .flatpickr-day.startRange.prevMonthDay, 
+    .flatpickr-day.endRange.prevMonthDay, .flatpickr-day.selected.nextMonthDay, 
+    .flatpickr-day.startRange.nextMonthDay, .flatpickr-day.endRange.nextMonthDay {
+        background: #EC4899 !important;
+        border-color: #EC4899 !important;
+    }
+</style>
 </head>
 
-<body class="bg-gray-50 font-sans text-gray-900">
+<body class="flex min-h-screen overflow-hidden">
 
-    <div class="flex min-h-screen">
-        {{-- SIDEBAR --}}
-        <aside class="w-72 bg-white border-r border-gray-200 hidden md:flex flex-col flex-shrink-0 sticky top-0 h-screen">
-            {{-- LOGO AREA - DIBESARKAN LAGI --}}
-            <div class="p-10 border-b border-gray-50 flex justify-center items-center">
-                <a href="{{ route('home') }}" class="flex flex-col items-center group">
-                    {{-- Ukuran logo diganti ke w-32 (128px) --}}
-                    <img src="{{ asset('images/logo_funtasyaplay.png') }}" 
-                         class="w-32 h-32 object-contain transition-transform group-hover:scale-105 duration-300">
-                </a>
+    {{-- SIDEBAR --}}
+    <aside class="w-72 bg-[#F0F4F7] flex flex-col border-r border-[#ACB3B7] flex-shrink-0 z-10">
+        <div class="p-8 mb-4">
+            <div class="flex items-center gap-3">
+                <img src="{{ asset('images/logo-funtasya.png') }}" alt="Logo" class="w-12 h-12">
+                <div>
+                    <h1 class="text-xl font-black text-gray-800 leading-none tracking-tight">Panel Admin</h1>
+                    <p class="text-[10px] font-bold text-gray-400 tracking-[0.1em] uppercase">Funtasya Play</p>
+                </div>
             </div>
+        </div>
 
-            {{-- MENU NAVIGASI --}}
-            <nav class="flex-1 overflow-y-auto p-6 space-y-1 custom-scrollbar">
-                <p class="px-4 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4">Utama</p>
-                
-                {{-- Dashboard --}}
-                <a href="{{ Auth::user()->role == 'super_admin' ? route('superadmin.dashboard') : '#' }}" 
-                   class="sidebar-link flex items-center gap-3 px-4 py-3.5 rounded-2xl text-gray-500 transition-all duration-200 {{ request()->routeIs('*.dashboard') ? 'sidebar-active shadow-lg shadow-pink-200' : '' }}">
-                    <svg class="w-5 h-5 transition-colors" fill="none" stroke="#EC4899" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"></path></svg>
-                    <span class="font-bold text-sm">Dashboard</span>
-                </a>
+        @php
+            $role = Auth::user()->role;
+            // Logic: Jika admin, gunakan prefix route 'admin', jika super_admin gunakan 'superadmin'
+            $prefix = ($role == 'super_admin') ? 'superadmin' : 'admin';
 
-                {{-- Pesanan --}}
-                <a href="{{ Auth::user()->role == 'super_admin' ? route('superadmin.orders.index') : route('admin.orders.index') }}" 
-                   class="sidebar-link flex items-center gap-3 px-4 py-3.5 rounded-2xl text-gray-500 transition-all duration-200 {{ request()->routeIs('*.orders.*') ? 'sidebar-active shadow-lg shadow-pink-200' : '' }}">
-                    <svg class="w-5 h-5 transition-colors" fill="none" stroke="#EC4899" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"></path></svg>
-                    <span class="font-bold text-sm">Manajemen Pesanan</span>
-                </a>
+            $dashboardRoute = "{$prefix}.dashboard";
+            $orderRoute = "{$prefix}.orders.index";
+            $userRoute = "{$prefix}.users.index";
+            $productRoute = "{$prefix}.products.index";
+            $shippingRoute = "{$prefix}.shipping.index";
+            $customerRoute = "{$prefix}.customers.index";
+            $promoRoute = "{$prefix}.promo.index";
+            $reportRoute = "{$prefix}.laporan.index";
+            $paymentRoute = "{$prefix}.payments.index";
+            $reviewRoute = "{$prefix}.reviews.index";
+            
+            $isProductActive = request()->is('*/products*') || request()->is('*/categories*') || request()->routeIs('*.products.*') || request()->routeIs('*.categories.*');
+        @endphp
 
-                
-                {{-- Ongkir --}}
-                <a href="{{ Auth::user()->role == 'super_admin' ? route('superadmin.shipping.index') : route('admin.shipping.index') }}" 
-                class="sidebar-link flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-200 
-                {{ request()->routeIs('*.shipping.*') ? 'sidebar-active shadow-lg shadow-pink-200' : 'text-gray-500' }}">
-                    
-                    {{-- Ikon Fast Delivery (Clean Version) --}}
-                    <svg class="w-6 h-6 flex-shrink-0 {{ request()->routeIs('*.shipping.*') ? 'text-white' : 'text-[#EC4899]' }}" 
-                        viewBox="0 0 24 24" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        stroke-width="2" 
-                        stroke-linecap="round" 
-                        stroke-linejoin="round">
-                        <rect x="1" y="3" width="15" height="13"></rect>
-                        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-                        <circle cx="5.5" cy="18.5" r="2.5"></circle>
-                        <circle cx="18.5" cy="18.5" r="2.5"></circle>
+        <nav class="flex-1 px-4 space-y-1">
+            {{-- Dashboard --}}
+            <a href="{{ route($dashboardRoute) }}" class="nav-link {{ request()->routeIs('*.dashboard') ? 'active' : '' }} flex items-center gap-4 px-5 py-3.5 rounded-2xl sidebar-text">
+                <img src="{{ asset('images/dashboard.svg') }}" class="w-5 h-5 {{ request()->routeIs('*.dashboard') ? 'icon-active' : 'opacity-70' }}">
+                Dashboard
+            </a>
+
+            {{-- Manajemen User (Sekarang Admin bisa lihat) --}}
+            <a href="{{ route($userRoute) }}" class="nav-link {{ request()->routeIs('*.users.*') ? 'active' : '' }} flex items-center gap-4 px-5 py-3.5 rounded-2xl sidebar-text">
+                <img src="{{ asset('images/users.svg') }}" class="w-5 h-5 {{ request()->routeIs('*.users.*') ? 'icon-active' : 'opacity-70' }}">
+                Manajemen User
+            </a>
+
+            {{-- Manajemen Produk --}}
+            <a href="{{ route($productRoute) }}" class="nav-link {{ $isProductActive ? 'active' : '' }} flex items-center gap-4 px-5 py-3.5 rounded-2xl sidebar-text">
+                <img src="{{ asset('images/products.svg') }}" class="w-5 h-5 {{ $isProductActive ? 'icon-active' : 'opacity-70' }}">
+                Manajemen Produk
+            </a>
+
+            {{-- Manajemen Pesanan --}}
+            <a href="{{ route($orderRoute) }}" class="nav-link {{ request()->routeIs('*.orders.*') ? 'active' : '' }} flex items-center gap-4 px-5 py-3.5 rounded-2xl sidebar-text">
+                <img src="{{ asset('images/orders.svg') }}" class="w-5 h-5 {{ request()->routeIs('*.orders.*') ? 'icon-active' : 'opacity-70' }}">
+                Manajemen Pesanan
+            </a>
+
+            {{-- Metode Pembayaran --}}
+            <a href="{{ route($paymentRoute) }}" class="nav-link {{ request()->routeIs('*.payments.*') ? 'active' : '' }} flex items-center gap-4 px-5 py-3.5 rounded-2xl sidebar-text">
+                <img src="{{ asset('images/payment.svg') }}" class="w-5 h-5 {{ request()->routeIs('*.payments.*') ? 'icon-active' : 'opacity-70' }}">
+                Metode Pembayaran
+            </a>
+
+            {{-- Promo & Diskon --}}
+            <a href="{{ route($promoRoute) }}" 
+            class="nav-link {{ request()->routeIs('*.promo.*') ? 'active' : '' }} flex items-center gap-4 px-5 py-3.5 rounded-2xl sidebar-text">
+                <img src="{{ asset('images/promo.svg') }}" 
+                    class="w-5 h-5 {{ request()->routeIs('*.promo.*') ? 'icon-active' : 'opacity-70' }}">
+                Promo & Diskon
+            </a>
+            {{-- Laporan --}}
+           <a href="{{ route($reportRoute) }}" 
+            class="nav-link {{ request()->routeIs('*.laporan.*') ? 'active' : '' }} flex items-center gap-4 px-5 py-3.5 rounded-2xl sidebar-text">
+                <img src="{{ asset('images/report.svg') }}" 
+                    class="w-5 h-5 {{ request()->routeIs('*.laporan.*') ? 'icon-active' : 'opacity-70' }}">
+                Laporan
+            </a>
+          {{-- Manajemen Pelanggan --}}
+            <a href="{{ route($customerRoute) }}" 
+                class="nav-link {{ request()->routeIs('*.customers.*') ? 'active' : '' }} flex items-center gap-4 px-5 py-3.5 rounded-2xl sidebar-text">
+                    <img src="{{ asset('images/customer.svg') }}" 
+                        class="w-5 h-5 {{ request()->routeIs('*.customers.*') ? 'icon-active' : 'opacity-70' }}">
+                    Manajemen Pelanggan
+            </a>
+            {{-- Manajemen Testimoni (Review) --}}
+            <a href="{{ route($reviewRoute) }}" 
+                class="nav-link {{ request()->routeIs('*.reviews.*') ? 'active' : '' }} flex items-center gap-4 px-5 py-3.5 rounded-2xl sidebar-text">
+                <div class="w-5 h-5 flex items-center justify-center">
+                    <svg class="w-5 h-5 {{ request()->routeIs('*.reviews.*') ? 'text-[#EC4899]' : 'text-gray-400' }}" 
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                            d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.382-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z">
+                        </path>
                     </svg>
-                    
-                    <span class="font-bold text-sm">Biaya Ongkir</span>
-                </a>
-
-                {{-- MASTER DATA --}}
-                @if(Auth::user()->role == 'super_admin')
-                <div class="pt-8">
-                    <p class="px-4 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4">Master Data</p>
-                    
-                    <a href="{{ route('superadmin.products.index') }}" 
-                       class="sidebar-link flex items-center gap-3 px-4 py-3.5 rounded-2xl text-gray-500 transition-all duration-200 {{ request()->routeIs('*.products.*') ? 'sidebar-active shadow-lg shadow-pink-200' : '' }}">
-                        <svg class="w-5 h-5 transition-colors" fill="none" stroke="#EC4899" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"></path></svg>
-                        <span class="font-bold text-sm">Katalog Produk</span>
-                    </a>
-
-                    <a href="{{ route('superadmin.categories.index') }}" 
-                       class="sidebar-link flex items-center gap-3 px-4 py-3.5 rounded-2xl text-gray-500 transition-all duration-200 {{ request()->routeIs('*.categories.*') ? 'sidebar-active shadow-lg shadow-pink-200' : '' }}">
-                        <svg class="w-5 h-5 transition-colors" fill="none" stroke="#EC4899" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581a2.25 2.25 0 003.182 0l4.318-4.318a2.25 2.25 0 000-3.182L11.159 3.659A2.25 2.25 0 009.568 3zM6 6h1.5v1.5H6V6z"></path></svg>
-                        <span class="font-bold text-sm">Kategori Produk</span>
-                    </a>
-
-                    <a href="{{ route('superadmin.users.index') }}" 
-                       class="sidebar-link flex items-center gap-3 px-4 py-3.5 rounded-2xl text-gray-500 transition-all duration-200 {{ request()->routeIs('*.users.*') ? 'sidebar-active shadow-lg shadow-pink-200' : '' }}">
-                        <svg class="w-5 h-5 transition-colors" fill="none" stroke="#EC4899" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"></path></svg>
-                        <span class="font-bold text-sm">Kelola Pengguna</span>
-                    </a>
                 </div>
-                @endif
-            </nav>
+                Manajemen Testimoni
+            </a>
+            {{-- Manajemen Ongkir --}}
+            <a href="{{ route($shippingRoute) }}" 
+            class="nav-link {{ request()->routeIs('*.shipping.*') ? 'active' : '' }} flex items-center gap-4 px-5 py-3.5 rounded-2xl sidebar-text">
+                <div class="w-5 h-5 flex items-center justify-center">
+                    <svg class="w-5 h-5 {{ request()->routeIs('*.shipping.*') ? 'text-[#EC4899]' : 'text-gray-400' }}" 
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                            d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>
+                </div>
+                Manajemen Ongkir
+            </a>
+        </nav>
 
-            {{-- LOGOUT BUTTON --}}
-            <div class="p-6 border-t border-gray-100 bg-gray-50">
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="flex items-center justify-center gap-3 w-full px-4 py-4 bg-white text-red-500 border border-red-100 hover:bg-red-50 rounded-2xl transition-all duration-200 font-black text-xs uppercase tracking-widest shadow-sm">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"></path></svg>
-                        Keluar Panel
-                    </button>
-                </form>
+        {{-- LOGOUT --}}
+        <div class="px-4 pb-8">
+            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+            class="flex items-center gap-4 px-5 py-3.5 rounded-2xl sidebar-text text-red-500 hover:bg-red-50 transition-all duration-300">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                    <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-6 0v-1m6-10V7a3 3 0 00-6 0v1"></path>
+                </svg>
+                Keluar Panel
+            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
+        </div>
+    </aside>
+
+    {{-- MAIN CONTENT --}}
+    <div class="flex-1 flex flex-col h-screen overflow-hidden">
+        <header class="h-24 w-full bg-white flex items-center justify-end px-12 gap-8 flex-shrink-0 border-b border-gray-50 shadow-sm no-print">
+
+            {{-- Notifikasi & Help --}}
+            <div class="flex items-center gap-7 text-gray-400">
+                <button class="hover:text-[#EC4899] transition-all duration-300 transform hover:scale-110">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                    </svg>
+                </button>
+                <button class="hover:text-[#EC4899] transition-all duration-300 transform hover:scale-110">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </button>
             </div>
-        </aside>
 
-        {{-- MAIN CONTENT --}}
-        <div class="flex-1 flex flex-col min-w-0">
-            <header class="bg-white/80 backdrop-blur-md h-20 border-b border-gray-200 flex items-center justify-between px-10 sticky top-0 z-10">
-                <div class="flex items-center gap-4">
-                    <span class="px-4 py-1.5 bg-pink-100 text-pink-600 rounded-full text-[10px] font-black uppercase tracking-[0.15em]">
-                        {{ Auth::user()->role == 'super_admin' ? 'Owner Account' : 'Staff Operational' }}
-                    </span>
-                    <h2 class="text-xl font-black text-gray-800 hidden lg:block ml-2">@yield('title')</h2>
-                </div>
+           <div class="h-10 border-r-2 border-gray-200 mx-4"></div>
+
+          @php
+            // Menentukan nama route berdasarkan role user yang login
+            $profileRoute = Auth::user()->role == 'super_admin' ? 'superadmin.profile.edit' : 'admin.profile.edit';
+            
+            // Menentukan label Role sesuai desain (Super Admin = OWNER, Admin = STAFF/ADMINISTRATOR)
+            $roleLabel = Auth::user()->role == 'super_admin' ? 'OWNER' : 'ADMINISTRATOR';
+        @endphp
+
+        <a href="{{ route($profileRoute) }}" class="flex items-center gap-4 pl-2 group">
+            <div class="text-right">
+                {{-- Baris 1: Menampilkan Username (Lebih Besar & Bold) --}}
+                <p style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 18px; color: #2C2F30;" 
+                class="leading-tight group-hover:text-[#EC4899] transition-colors">
+                    {{ Auth::user()->username ?? Auth::user()->name }}
+                </p>
                 
-                <div class="flex items-center gap-5">
-                    <div class="text-right hidden sm:block">
-                        <p class="text-sm font-black text-gray-800 leading-none mb-1">{{ Auth::user()->name }}</p>
-                        <p class="text-[10px] text-gray-400 font-bold tracking-tight">{{ Auth::user()->email }}</p>
-                    </div>
-                    <img src="{{ Auth::user()->avatar ? asset('storage/'.Auth::user()->avatar) : 'https://ui-avatars.com/api/?name='.Auth::user()->name.'&background=EC4899&color=fff' }}" 
-                         class="w-12 h-12 rounded-2xl border-2 border-white shadow-md object-cover">
-                </div>
-            </header>
+                {{-- Baris 2: Menampilkan Role/Label (Lebih Kecil & Abu-abu) --}}
+                <p style="font-family: 'Inter', sans-serif; font-weight: 700; font-size: 11px; color: #9CA3AF; letter-spacing: 0.05em;" 
+                class="uppercase text-right">
+                    {{ $roleLabel }}
+                </p>
+            </div>
+            
+            {{-- Avatar Bulat sesuai desain --}}
+            <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-sm ring-2 ring-gray-100 group-hover:ring-[#EC4899] transition-all">
+                <img src="{{ Auth::user()->avatar ? asset('storage/'.Auth::user()->avatar) : 'https://ui-avatars.com/api/?name='.urlencode(Auth::user()->name).'&background=EC4899&color=fff' }}" 
+                    class="w-full h-full object-cover">
+            </div>
+        </a>
+        </header>
 
-            <main class="p-10 bg-gray-50/50 flex-grow">
-                @if(session('success'))
-                    <div class="mb-8 p-4 bg-green-100 border-l-4 border-green-500 text-green-700 font-bold rounded-r-xl shadow-sm">
-                        {{ session('success') }}
-                    </div>
-                @endif
-                @yield('content')
-            </main>
-
-            {{-- FOOTER --}}
-            @include('components.footer')
+        <div class="flex-1 overflow-y-auto bg-white">
+            @yield('content')
         </div>
     </div>
-
-    {{-- SCRIPT --}}
-    @stack('prepend-script')
-    @include('includes.script')
     @stack('addon-script')
 </body>
 </html>
