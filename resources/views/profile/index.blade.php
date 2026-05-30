@@ -1,278 +1,115 @@
 @extends('layouts.main')
 
 @section('content')
-<style>
-    /* CSS Tambahan untuk Input Modal */
-    .modal-input {
-        width: 100%;
-        background-color: #FAECEC;
-        border: 1px solid #FFDDDD;
-        border-radius: 12px;
-        padding: 12px;
-        color: #444444;
-        font-family: 'Inter', sans-serif;
-        font-size: 14px;
-        outline: none;
-    }
-    .modal-input:focus {
-        border-color: #EC4899;
-    }
-    [x-cloak] { display: none !important; }
-</style>
+<div x-data="addressApp()" class="min-h-screen bg-[#F8F9FB] py-12">
+    <div class="max-w-6xl mx-auto px-6">
+        
+        {{-- Header Section --}}
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
+            <div>
+                <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Akun Saya</h1>
+                <p class="text-slate-500 mt-1">Kelola detail pribadi dan lihat aktivitas belanja Anda.</p>
+            </div>
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="flex items-center gap-2 px-6 py-2.5 bg-white border border-slate-200 text-slate-600 rounded-xl font-semibold hover:bg-red-50 hover:text-red-600 hover:border-red-100 transition-all">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Keluar
+                </button>
+            </form>
+        </div>
 
-        {{-- Pastikan x-data membungkus bagian yang menggunakan modal --}}
-        <div x-data="addressApp()" class="bg-gray-50 min-h-screen pb-20">
-            <div class="max-w-7xl mx-auto px-6 pt-10">
-
-                {{-- Header Profil --}}
-                <div class="flex flex-col md:flex-row justify-between items-center mb-10 bg-white p-6 rounded-[30px] shadow-sm">
-                    <div class="flex items-center gap-6">
-                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center overflow-hidden border-4 border-white shadow-sm">
-                            @if(auth()->user()->avatar)
-                                {{-- Tampilkan foto yang diupload customer --}}
-                              <img src="{{ asset(auth()->user()->avatar ?? 'avatars/default-user.png') }}" class="w-full h-full object-cover">
-                            @else
-                                {{-- Tampilkan default avatar dari UI Avatars --}}
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=ec4899&color=fff&bold=true&length=2&size=80" class="w-full h-full object-cover">
-                            @endif
-                        </div>
-                        <div>
-                            <h1 class="text-2xl font-black text-[#222222]">Profil Saya</h1>
-                            <p class="text-gray-500 font-medium">Kelola informasi profil, alamat, dan pesanan Anda.</p>
-                        </div>
+        {{-- Main Grid --}}
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            {{-- Profile Card --}}
+            <div class="lg:col-span-2 bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
+                <div class="flex items-center gap-5 mb-8">
+                    <div class="w-20 h-20 rounded-2xl bg-indigo-600 flex items-center justify-center text-white text-2xl font-bold shadow-lg shadow-indigo-200">
+                        {{ substr($user->name, 0, 1) }}
                     </div>
-                    
-                    <form action="{{ route('logout') }}" method="POST" class="mt-4 md:mt-0">
-                        @csrf
-                        <button type="submit" 
-                                class="flex items-center gap-2 border-2 border-[#FFDDDD] bg-[#FAECEC] text-[#EC4899] px-6 py-2 rounded-[15px] font-bold hover:opacity-80 transition-all shadow-sm">
-                            <img src="{{ asset('images/Logout.svg') }}" alt="Icon Keluar" class="w-6 h-6"> 
-                            <span class="text-[18px]">Keluar</span>
-                        </button>
-                    </form>
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900">{{ $user->name }}</h2>
+                        <p class="text-slate-400">{{ $user->email }}</p>
+                    </div>
                 </div>
-
-                <div class="space-y-10">
-
-                    {{-- Bagian 1: Informasi Akun --}}
-                    <section>
-                        <div class="flex items-center gap-3 mb-6">
-                        <img src="{{ asset('images/icon profile.svg') }}" alt="Icon Profile" class="w-7 h-7 object-contain">
-                            <h2 class="text-xl font-bold text-[#222222]">Informasi Akun</h2>
-                        </div>
-                    <div class="bg-white p-8 rounded-[35px] shadow-sm border border-[#D9D9D9]">
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                                <div class="bg-[#FAECEC] p-5 rounded-[20px] border border-[#FFDDDD]">
-                                    <label class="block text-[12px] uppercase font-medium text-[#EC4899] mb-1 font-inter">USERNAME</label>
-                                    <p class="text-[16px] font-semibold text-[#000000] font-inter">{{ $user->name }}</p>
-                                </div>
-
-                                <div class="bg-[#FFF7ED] p-5 rounded-[20px] border border-[#FFEED9]">
-                                    <label class="block text-[12px] uppercase font-medium text-[#F8A410] mb-1 font-inter">EMAIL</label>
-                                    <p class="text-[16px] font-semibold text-[#000000] font-inter">{{ $user->email }}</p>
-                                </div>
-
-                                <div class="bg-[#EEF4FF] p-5 rounded-[20px] border border-[#DDE9FF]">
-                                    <label class="block text-[12px] uppercase font-medium text-[#0093F5] mb-1 font-inter">NOMOR HP</label>
-                                    <p class="text-[16px] font-semibold text-[#000000] font-inter">{{ $user->phone ?? '-' }}</p>
-                                </div>
-                            </div>
-
-                                {{-- TOMBOL EDIT PROFILE DAN UBAH PASSWORD --}}
-                                <div class="flex gap-4">
-                                <button @click="openEditProfileModal()" 
-                                        class="flex items-center gap-2 bg-[#EC4899] text-white px-6 py-2.5 rounded-[15px] font-bold shadow-sm hover:opacity-90 transition-all">
-                                    <i class="fa-solid fa-pencil text-sm"></i>
-                                    Edit Profil
-                                </button>
-
-                                <button @click="openUbahPasswordModal()" 
-                                        class="flex items-center gap-2 border-2 border-gray-200 text-[#444444] px-6 py-2.5 rounded-[15px] font-bold hover:bg-gray-50 transition-all">
-                                    <i class="fa-solid fa-lock text-sm"></i>
-                                    Ubah Password
-                                </button>
-                            </div>
-                            </div>
-                    </section>
-
-                    {{-- Bagian 2: Alamat Pengiriman --}}
-                    <section class="mt-10">
-                        <div class="flex items-center gap-3 mb-6">
-                            <img src="{{ asset('images/Address.svg') }}" alt="Icon Alamat" class="w-7 h-7 object-contain">
-                            <h2 class="text-xl font-bold text-[#222222]">Alamat Pengiriman</h2>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            
-                            {{-- Looping alamat dari tabel addresses --}}
-                            @forelse($addresses as $address)
-                                <div class="bg-white p-6 rounded-[40px] border border-[#D9D9D9] relative">
-                                    
-                                    {{-- Badge Utama --}}
-                                    @if($address->is_primary)
-                                        <div class="absolute top-6 right-6 bg-[#FAECEC] text-[#EC4899] text-[12px] font-semibold px-3 py-1 rounded-md uppercase">
-                                            Utama
-                                        </div>
-                                    @endif
-                                    
-                                    <div class="mb-6">
-                                        <h3 class="text-[18px] font-bold text-[#222222]">{{ $address->recipient_name }}</h3>
-                                        <p class="text-[#64748B] text-[14px] mt-1">{{ $address->phone_number }}</p>
-                                        <p class="text-[#64748B] text-[14px] leading-relaxed mt-2">
-                                            {{ $address->full_address }}, {{ $address->city }}, {{ $address->postal_code }}
-                                        </p>
-                                    </div>
-                                    
-                                    <div class="flex gap-3">
-
-                                        {{-- Tombol Edit --}}
-                                        <button @click="editAddress({{ $address->id }})" 
-                                                class="flex items-center gap-2 bg-[#EC4899] text-white px-5 py-2 rounded-[15px] font-bold text-[14px] hover:opacity-90 transition-all">
-                                            <i class="fa-solid fa-pencil text-[12px]"></i>
-                                            Edit
-                                        </button>
-
-                                        {{-- Tombol Hapus --}}
-                                        <form action="{{ route('addresses.destroy', $address->id) }}" method="POST" 
-                                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus alamat ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="flex items-center gap-2 border border-[#D9D9D9] text-[#444444] px-5 py-2 rounded-[15px] font-bold text-[14px] hover:bg-gray-50 transition-all">
-                                            <i class="fa-solid fa-trash-can text-[12px]"></i>
-                                            Hapus
-                                        </button>
-                                    </form>
-                                    </div>
-                                </div>
-                            @empty
-
-                            {{-- Tombol saat alamat kosong --}}
-                                <button @click="openModal = true" class="border-2 border-dashed border-[#D9D9D9] rounded-[35px] p-10 flex flex-col items-center justify-center hover:border-[#FFDDDD] transition-all group">
-                                    <i class="fa-solid fa-plus text-[#94A3B8] text-2xl mb-2 group-hover:text-[#EC4899]"></i>
-                                    <span class="text-[#94A3B8] font-bold group-hover:text-[#EC4899]">Tambah Alamat Baru</span>
-                                </button>
-                            @endforelse
-                                {{--  Tombol Tambah Alamat Lain --}}
-                            @if($addresses->count() > 0)
-                                <button @click="openModal = true" class="border-2 border-dashed border-[#EC4899] rounded-[40px] p-8 flex flex-col items-center justify-center bg-white hover:bg-pink-50 transition-all group min-h-[220px]">
-                                    <div class="w-12 h-12 bg-[#EC4899] text-white rounded-full flex items-center justify-center mb-3 shadow-sm group-hover:scale-110 transition-transform">
-                                    <i class="fa-solid fa-plus text-xl"></i>
-                                    </div>
-                                    <span class="text-[#EC4899] font-bold text-[16px]">Tambah Alamat Baru</span>
-                                </button>
-                            @endif
-                        </div>
-                    </section>
-
-                {{-- Bagian 3: Riwayat Pesanan --}}
-                <section class="mt-10">
-                    <div class="flex items-center gap-3 mb-6">
-                        {{-- Ikon Shopping Bag --}}
-                        <img src="{{ asset('images/Shopping Bag.svg') }}" alt="Icon Riwayat" class="w-7 h-7">
-                        <h2 class="text-xl font-bold text-[#222222]">Riwayat Pesanan</h2>
-                    </div>
-
-                    <div class="space-y-4">
-                        @forelse($orders as $order)
-                        <div class="bg-white p-5 rounded-[25px] border border-[#D9D9D9] flex flex-col md:flex-row justify-between items-center gap-4 transition-all hover:shadow-sm">
-                            <div class="flex items-center gap-5 w-full">
-                                <div class="w-20 h-20 bg-[#F7F0F0] rounded-[22px] flex items-center justify-center">
-                                    <img src="{{ asset('images/Big Parcel.svg') }}" alt="Order Icon" class="w-12 h-12">
-                                </div>
-                                
-                                <div>
-                                    <h4 class="font-semibold text-[16px] text-[#000000]">#{{ $order->order_code }}</h4>
-                                    <div class="flex items-center gap-2 font-light text-[12px] text-[#000000] mt-0.5">
-                                        <span>{{ $order->created_at->format('d F Y') }}</span>
-                                        <span class="text-[8px]">●</span>
-                                        <span>{{ $order->items_count }} Item</span>
-                                    </div>
-                                    <p class="text-[#EC4899] font-semibold text-[16px] mt-1">Rp {{ number_format($order->total_price, 0, ',', '.') }}</p>
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-center gap-3 w-full md:w-auto justify-end">
-                                {{-- Status Selesai --}}
-                                @if($order->status == 'complete')
-                                    <span class="bg-[#EEF9F1] text-[#78C28D] px-6 py-2.5 rounded-xl text-[14px] font-bold">
-                                        Selesai
-                                    </span>
-
-                                {{-- Status Menunggu Pembayaran --}}
-                                @elseif($order->status == 'process')
-                                    <span class="bg-[#FFF8ED] text-[#E5A94D] px-6 py-2.5 rounded-xl text-[14px] font-bold">
-                                        Menunggu Pembayaran
-                                    </span>
-                                @else
-                                    <span class="bg-red-50 text-red-400 px-6 py-2.5 rounded-xl text-[14px] font-bold">
-                                        Dibatalkan
-                                    </span>
-                                @endif
-
-                                {{-- Tombol Detail Pesanan --}}
-                                <a href="/order/detail/{{ $order->order_code }}" 
-                                class="border-2 border-[#F0F0F0] text-[#D46097] px-6 py-2.5 rounded-xl text-[14px] font-bold hover:bg-pink-50 transition-all whitespace-nowrap">
-                                    Detail Pesanan
-                                </a>
-                            </div>
-                        </div>
-                        @empty
-                        <div class="bg-white p-12 rounded-[35px] text-center border border-dashed border-gray-200">
-                            <p class="text-gray-400 font-medium">Belum ada riwayat pesanan.</p>
-                        </div>
-                        @endforelse
-                    </div>
-
-                    {{-- Paginasi --}}
-                    <div class="mt-10 flex justify-center">
-                        @if ($orders->hasPages())
-                            <nav role="navigation" aria-label="Pagination Navigation" class="flex items-center gap-2">
-                                {{-- Tombol Previous --}}
-                                @if ($orders->onFirstPage())
-                                    <span class="px-4 py-2 text-gray-300 border border-[#D9D9D9] rounded-[15px] cursor-not-allowed">
-                                        <i class="fa-solid fa-chevron-left text-xs"></i>
-                                    </span>
-                                @else
-                                    <a href="{{ $orders->previousPageUrl() }}" class="px-4 py-2 text-[#EC4899] border border-[#D9D9D9] rounded-[15px] hover:bg-pink-50 transition-all">
-                                        <i class="fa-solid fa-chevron-left text-xs"></i>
-                                    </a>
-                                @endif
-
-                                {{-- Nomor Halaman --}}
-                                @foreach ($orders->links()->elements[0] as $page => $url)
-                                    @if ($page == $orders->currentPage())
-                                        <span class="px-4 py-2 bg-[#EC4899] text-white rounded-[15px] font-bold shadow-sm">
-                                            {{ $page }}
-                                        </span>
-                                    @else
-                                        <a href="{{ $url }}" class="px-4 py-2 text-[#444444] border border-[#D9D9D9] rounded-[15px] hover:border-[#EC4899] hover:text-[#EC4899] transition-all font-medium">
-                                            {{ $page }}
-                                        </a>
-                                    @endif
-                                @endforeach
-
-                                {{-- Tombol Next --}}
-                                @if ($orders->hasMorePages())
-                                    <a href="{{ $orders->nextPageUrl() }}" class="px-4 py-2 text-[#EC4899] border border-[#D9D9D9] rounded-[15px] hover:bg-pink-50 transition-all">
-                                        <i class="fa-solid fa-chevron-right text-xs"></i>
-                                    </a>
-                                @else
-                                    <span class="px-4 py-2 text-gray-300 border border-[#D9D9D9] rounded-[15px] cursor-not-allowed">
-                                        <i class="fa-solid fa-chevron-right text-xs"></i>
-                                    </span>
-                                @endif
-                            </nav>
-                        @endif
-                    </div>
-                </section>
+                <div class="flex gap-3">
+                    <button @click="openEditProfileModal()" class="px-5 py-2.5 bg-slate-900 text-white rounded-xl font-medium hover:bg-slate-800 transition-all text-sm">Edit Profil</button>
+                    <button @click="openUbahPasswordModal()" class="px-5 py-2.5 bg-slate-100 text-slate-700 rounded-xl font-medium hover:bg-slate-200 transition-all text-sm">Ganti Password</button>
                 </div>
+            </div>
+
+            {{-- Summary Card --}}
+            <div class="bg-gradient-to-br from-indigo-600 to-violet-600 p-8 rounded-3xl text-white shadow-xl shadow-indigo-200 flex flex-col justify-between">
+                <div>
+                    <h3 class="font-medium opacity-80">Total Pesanan</h3>
+                    <div class="text-5xl font-extrabold mt-2">{{ $orders->count() }}</div>
+                </div>
+                <p class="text-indigo-100 text-sm mt-4">Aktif di sistem kami sejak {{ $user->created_at->format('Y') }}</p>
+            </div>
+
+            {{-- Address Section --}}
+            <div class="lg:col-span-3">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-slate-900">Buku Alamat</h3>
+                    <button @click="openModal = true" class="text-indigo-600 font-semibold text-sm hover:underline">+ Tambah Baru</button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    @foreach($addresses as $address)
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 hover:shadow-md transition-shadow">
+                        <div class="flex justify-between mb-3">
+                            <span class="text-[10px] font-bold uppercase tracking-wider {{ $address->is_primary ? 'text-indigo-600 bg-indigo-50' : 'text-slate-400 bg-slate-50' }} px-2 py-1 rounded">{{ $address->is_primary ? 'Utama' : 'Sekunder' }}</span>
+                            <button @click="editAddress({{ $address->id }})" class="text-slate-400 hover:text-indigo-600"><i class="fa-solid fa-pen-to-square"></i></button>
+                        </div>
+                        <h4 class="font-bold text-slate-900">{{ $address->recipient_name }}</h4>
+                        <p class="text-sm text-slate-500 mt-1 line-clamp-2 leading-relaxed">{{ $address->full_address }}</p>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+
+            {{-- Transaction History --}}
+            <div class="lg:col-span-3 bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+                <div class="p-8 border-b border-slate-50">
+                    <h3 class="text-xl font-bold text-slate-900">Riwayat Transaksi</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-50 text-slate-400 text-xs uppercase">
+                            <tr>
+                                <th class="px-8 py-4">Kode Pesanan</th>
+                                <th class="px-8 py-4">Tanggal</th>
+                                <th class="px-8 py-4">Status</th>
+                                <th class="px-8 py-4 text-right">Total</th>
+                                <th class="px-8 py-4 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50">
+                            @foreach($orders as $order)
+                            <tr class="hover:bg-slate-50/50 transition-colors">
+                                <td class="px-8 py-6 font-semibold text-slate-700">#{{ $order->order_code }}</td>
+                                <td class="px-8 py-6 text-slate-500">{{ $order->created_at->format('d M Y') }}</td>
+                                <td class="px-8 py-6">
+                                    <span class="px-3 py-1 text-[11px] font-bold rounded-full {{ $order->status == 'complete' ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600' }}">
+                                        {{ strtoupper($order->status) }}
+                                    </span>
+                                </td>
+                                <td class="px-8 py-6 text-right font-bold text-slate-900">Rp{{ number_format($order->total_price, 0) }}</td>
+                                <td class="px-8 py-6 text-center">
+                                    <a href="/order/detail/{{ $order->order_code }}" class="text-indigo-600 hover:text-indigo-800 font-semibold text-sm">Lihat Detail</a>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
                 {{-- MODAL TAMBAH ALAMAT --}}
             <div x-show="openModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" x-cloak>
                 <div class="bg-white rounded-[30px] w-full max-w-[500px] p-8 relative mx-4 max-h-[90vh] overflow-y-auto" @click.away="openModal = false">
                     <div class="flex justify-between items-center mb-6">
                         <div class="flex items-center gap-2">
-                            <img src="{{ asset('images/Address.svg') }}" class="w-6 h-6">
+                            <img src="{{ asset('images/address.svg') }}" class="w-6 h-6">
                             <h2 class="text-black font-semibold text-[16px]">Tambah Alamat Pengiriman</h2>
                         </div>
                         <button @click="openModal = false"><img src="{{ asset('images/silang.svg') }}" class="w-4 h-4"></button>
@@ -369,7 +206,7 @@
             <div class="bg-white rounded-[30px] w-full max-w-[500px] p-8 relative mx-4 max-h-[90vh] overflow-y-auto" @click.away="editModalOpen = false">
                 <div class="flex justify-between items-center mb-6">
                     <div class="flex items-center gap-2">
-                        <img src="{{ asset('images/Address.svg') }}" class="w-6 h-6">
+                        <img src="{{ asset('images/address.svg') }}" class="w-6 h-6">
                         <h2 class="text-black font-semibold text-[16px]">Edit Alamat Pengiriman</h2>
                     </div>
                     <button @click="editModalOpen = false">
@@ -469,7 +306,7 @@
                 <div class="bg-white rounded-[30px] w-full max-w-[500px] p-8 relative mx-4 max-h-[90vh] overflow-y-auto" @click.away="editProfileModal = false">
                     <div class="flex justify-between items-center mb-6">
                         <div class="flex items-center gap-2">
-                            <img src="{{ asset('images/icon profile.svg') }}" class="w-6 h-6">
+                            <img src="{{ asset('images/icon-profile.svg') }}" class="w-6 h-6">
                             <h2 class="text-black font-bold text-[18px]" style="font-family: 'Gotham Rounded', sans-serif;">Edit Profil</h2>
                         </div>
                         <button @click="editProfileModal = false">
@@ -499,7 +336,7 @@
                             <label class="block text-black font-semibold text-[12px] mb-2" style="font-family: 'Inter', sans-serif;">USERNAME</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <img src="{{ asset('images/profile username.svg') }}" class="w-5 h-5">
+                                    <img src="{{ asset('images/profile-username.svg') }}" class="w-5 h-5">
                                 </div>
                                 <input type="text" name="name" x-model="editProfileForm.name" 
                                     class="w-full bg-[#FAECEC] border border-[#FFDDDD] rounded-[12px] pl-10 pr-4 py-3 text-black text-[12px] focus:outline-none focus:border-[#EC4899] transition-all"
@@ -512,7 +349,7 @@
                             <label class="block text-black font-semibold text-[12px] mb-2" style="font-family: 'Inter', sans-serif;">EMAIL</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <img src="{{ asset('images/Email.svg') }}" class="w-5 h-5">
+                                    <img src="{{ asset('images/email.svg') }}" class="w-5 h-5">
                                 </div>
                                 <input type="email" name="email" x-model="editProfileForm.email" 
                                     class="w-full bg-[#FAECEC] border border-[#FFDDDD] rounded-[12px] pl-10 pr-4 py-3 text-black text-[12px] focus:outline-none focus:border-[#EC4899] transition-all"
@@ -525,7 +362,7 @@
                             <label class="block text-black font-semibold text-[12px] mb-2" style="font-family: 'Inter', sans-serif;">NOMOR HP</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <img src="{{ asset('images/Phone.svg') }}" class="w-5 h-5">
+                                    <img src="{{ asset('images/phone.svg') }}" class="w-5 h-5">
                                 </div>
                                 <input type="tel" name="phone" x-model="editProfileForm.phone" 
                                     class="w-full bg-[#FAECEC] border border-[#FFDDDD] rounded-[12px] pl-10 pr-4 py-3 text-black text-[12px] focus:outline-none focus:border-[#EC4899] transition-all"
@@ -550,7 +387,7 @@
                 <div class="bg-white rounded-[30px] w-full max-w-[500px] p-8 relative mx-4 max-h-[90vh] overflow-y-auto" @click.away="ubahPasswordModal = false">
                     <div class="flex justify-between items-center mb-6">
                         <div class="flex items-center gap-2">
-                            <img src="{{ asset('images/ubah password.svg') }}" class="w-6 h-6">
+                            <img src="{{ asset('images/ubah-password.svg') }}" class="w-6 h-6">
                             <h2 class="text-black font-bold text-[18px]" style="font-family: 'Gotham Rounded', sans-serif;">Ubah Password</h2>
                         </div>
                         <button @click="ubahPasswordModal = false">
@@ -570,7 +407,7 @@
                                     class="w-full bg-[#FAECEC] border border-[#FFDDDD] rounded-[12px] pl-4 pr-10 py-3 text-black text-[12px] focus:outline-none focus:border-[#EC4899] transition-all"
                                     style="font-family: 'Inter', sans-serif;" placeholder="Masukkan kata sandi lama" required>
                                 <button type="button" @click="showCurrentPassword = !showCurrentPassword" class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                                    <img src="{{ asset('images/Eye ubah password.svg') }}" class="w-5 h-5">
+                                    <img src="{{ asset('images/eye-ubah-password.svg') }}" class="w-5 h-5">
                                 </button>
                             </div>
                         </div>
@@ -583,7 +420,7 @@
                                     class="w-full bg-[#FAECEC] border border-[#FFDDDD] rounded-[12px] pl-4 pr-10 py-3 text-black text-[12px] focus:outline-none focus:border-[#EC4899] transition-all"
                                     style="font-family: 'Inter', sans-serif;" placeholder="Masukkan kata sandi baru" required>
                                 <button type="button" @click="showNewPassword = !showNewPassword" class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                                    <img src="{{ asset('images/Eye ubah password.svg') }}" class="w-5 h-5">
+                                    <img src="{{ asset('images/eye-ubah-password.svg') }}" class="w-5 h-5">
                                 </button>
                             </div>
                         </div>
@@ -596,7 +433,7 @@
                                     class="w-full bg-[#FAECEC] border border-[#FFDDDD] rounded-[12px] pl-4 pr-10 py-3 text-black text-[12px] focus:outline-none focus:border-[#EC4899] transition-all"
                                     style="font-family: 'Inter', sans-serif;" placeholder="Konfirmasi kata sandi baru" required>
                                 <button type="button" @click="showConfirmPassword = !showConfirmPassword" class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                                    <img src="{{ asset('images/Eye ubah password.svg') }}" class="w-5 h-5">
+                                    <img src="{{ asset('images/eye-ubah-password.svg') }}" class="w-5 h-5">
                                 </button>
                             </div>
                         </div>
